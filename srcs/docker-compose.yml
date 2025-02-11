@@ -1,0 +1,100 @@
+# services:
+#   mariadb:
+#     build:
+#       context: ./requirements/mariadb
+#     volumes:
+#       - /home/${USER}/data/mariadb:/var/lib/mysql
+#       - ./requirements/mariadb/conf:/etc/mysql/conf.d
+
+#   nginx:
+#     build:
+#       context: ./requirements/nginx
+#     volumes:
+#       - /home/${USER}/data/nginx:/var/www/html
+#       - ./requirements/nginx/conf:/etc/nginx/conf.d
+
+#   wordpress:
+#     build:
+#       context: ./requirements/wordpress
+#     volumes:
+#       - /home/${USER}/data/wordpress:/var/www/html
+#       - ./requirements/wordpress/conf:/usr/local/etc/php
+
+
+version: "3.8"  # Make sure the version is specified
+
+services:
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    # image: mariadb
+    volumes:
+      - mariadb_data:/var/www/html
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - network
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    restart: on-failure
+
+  wordpress:
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    # restart: always
+    env_file:
+      - .env
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - network
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_HOSTNAME: ${MYSQL_HOSTNAME}
+      
+  nginx:
+    container_name: NGINX
+    build:
+      context: ./requirements/nginx
+    ports:
+      - "443:443" # Map port 443 for HTTPS
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+        - network
+    depends_on:
+          - wordpress
+          - mariadb
+    restart: always
+
+
+
+# Define networks
+networks:
+  network:
+    driver: bridge
+
+# Define named volumes
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ahmad/data/mysqld
+      o: bind
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ahmad/data/wordpress
+      o: bind
