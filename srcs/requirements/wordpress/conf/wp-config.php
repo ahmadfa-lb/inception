@@ -1,7 +1,7 @@
 <?php
 
 define('DB_NAME', 'wordpress');
-define('DB_USER', 'ahmad');
+define('DB_USER', 'afarachi');
 define('DB_PASSWORD', 'kali1133');
 define('DB_HOST', 'mariadb');
 define( 'DB_CHARSET', 'utf8' );
@@ -9,7 +9,7 @@ define( 'DB_COLLATE', '' );
 
 define('WP_HOME', 'https://localhost/wordpress');
 define('WP_SITEURL', 'https://localhost/wordpress');
-define('ABSPATH', '/var/www/html/wordpress/');
+define('ABSPATH', '/var/www/wordpress/');
 
 // i don't think we will use them
 define('AUTH_KEY',         'q,VrMu@W3N$8lsY~K;,&~}+mj|}PjcUdh)H0Lyk+jII0/ Plr^HP*(~IA#p#G%~p');
@@ -31,7 +31,7 @@ define( 'WP_DEBUG', false );
 
 //Absolute path to the WordPress directory.
 if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', '/var/www/html/wordpress' );
+	define( 'ABSPATH', '/var/www/wordpress' );
 }
 
 /** Sets up WordPress vars and included files. */
