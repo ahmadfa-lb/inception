@@ -19,7 +19,7 @@ RUN mkdir -p /var/www/wordpress
 
 # Copy PHP configuration
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
-COPY ./conf/wp-config.php /var/www/wordpress
+COPY ./conf/wp-config.php /var/www/wordpress/
 
 
 # Ensure the directory exists before setting ownership/permissions

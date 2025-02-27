@@ -4,38 +4,41 @@ echo "Downloading WordPress..."
 wget -c --tries=3 https://wordpress.org/latest.tar.gz || { echo "Download failed"; exit 1; }
 
 # Extract directly into the correct location
-mkdir -p /var/www/wordpress
 tar -xzvf latest.tar.gz -C /var/www/ || { echo "Extraction failed"; exit 1; }
 rm latest.tar.gz
 
-# Move the WordPress content to /var/www/wordpress
-# mv /var/www/wordpress/wordpress/* /var/www/wordpress/
-# rm -rf /var/www/wordpress/wordpress
+
 
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 mv wp-cli.phar /usr/local/bin/wp
 
+
+cd /var/www/wordpress/
 # Set proper ownership and permissions
 chown -R www-data:www-data /var/www/wordpress/
 chmod -R 755 /var/www/wordpress/
 
-# echo "Configuring wp-config.php..."
-# cd /var/www/wordpress
-# cp wp-config-sample.php wp-config.php
-# sed -i "s/username_here/$MYSQL_USER/g" wp-config.php
-# sed -i "s/password_here/$MYSQL_PASSWORD/g" wp-config.php
-# sed -i "s/localhost/$MYSQL_HOSTNAME/g" wp-config.php
-# sed -i "s/database_name_here/$MYSQL_DATABASE/g" wp-config.php
-
 echo "Running WordPress installation..."
-wp core install \
-    --url="$WP_HOME" \
-    --title="My WordPress Site" \
-    --admin_user="admin" \
-    --admin_password="admin_password" \
-    --admin_email="admin@example.com" \
-    --path="/var/www/wordpress" \
-    --allow-root
+
+wp core download --allow-root;
+
+echo "Wordpress: creating users..."
+
+
+wp core install --allow-root --url=${DOMAIN_NAME} --title=${MYSQL_DATABASE} --admin_user=${WP_ADMIN} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL}
+
+
+wp user create --allow-root ${MYSQL_USER} ${WP_USER_EMAIL} --user_pass=${MYSQL_PASSWORD};
+
+
+# wp core install \
+#     --url="http://localhost" \
+#     --title="My WordPress Site" \
+#     --admin_user="ahmadfa" \
+#     --admin_password="kali@1133" \
+#     --admin_email="farachiahmad@gmail.com" \
+#     --path="/var/www/wordpress" \
+#     --allow-root
 
 exec php-fpm7.4 -F
