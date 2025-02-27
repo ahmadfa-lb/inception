@@ -7,8 +7,8 @@ define('DB_HOST', 'mariadb');
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 
-define('WP_HOME', 'https://localhost/wordpress');
-define('WP_SITEURL', 'https://localhost/wordpress');
+define('WP_HOME', 'https://localhost/');
+define('WP_SITEURL', 'https://localhost/');
 define('ABSPATH', '/var/www/wordpress/');
 
 // i don't think we will use them

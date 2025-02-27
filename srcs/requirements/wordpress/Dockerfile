@@ -46,4 +46,4 @@ EXPOSE 9000
 ENTRYPOINT ["/usr/local/bin/create_wp.sh"]
 
 # Start PHP-FPM
-CMD ["/usr/sbin/php-fpm7.4", "-F"]
+# CMD ["/usr/sbin/php-fpm7.4", "-F"]
