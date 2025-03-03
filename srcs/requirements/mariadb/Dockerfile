@@ -13,5 +13,4 @@ RUN chmod +x /data/setup.sh
 
 EXPOSE 3306
 
-# CMD ["./data/setup.sh"]
 CMD ["bash", "/data/setup.sh"]

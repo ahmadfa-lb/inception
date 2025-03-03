@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Check if required environment variables are set
 required_vars=("MYSQL_ROOT_PASSWORD" "MYSQL_DATABASE" "MYSQL_USER" "MYSQL_PASSWORD")
 for var in "${required_vars[@]}"; do
     if [ -z "${!var}" ]; then
@@ -9,13 +8,11 @@ for var in "${required_vars[@]}"; do
     fi
 done
 
-# Initialize database if not already initialized
 if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE}" ]; then
     echo "Initializing database..."
     mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
-    # Start MariaDB in safe mode temporarily to run setup commands
-    mysqld --user=mysql --skip-networking &
+    mysqld --user=mysql --skip-networking
     pid="$!"
 
     # Wait for MariaDB to be ready
