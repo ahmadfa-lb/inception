@@ -1,38 +1,19 @@
 #!/bin/bash
 
-required_vars=("MYSQL_ROOT_PASSWORD" "MYSQL_DATABASE" "MYSQL_USER" "MYSQL_PASSWORD")
-for var in "${required_vars[@]}"; do
-    if [ -z "${!var}" ]; then
-        echo "Missing required environment variable $var"
-        exit 1
-    fi
-done
-
-if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE}" ]; then
-    echo "Initializing database..."
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+    echo "Initializing MySQL data directory..."
     mysql_install_db --user=mysql --datadir=/var/lib/mysql
+fi
 
-    mysqld --user=mysql --skip-networking
-    pid="$!"
-
-    # Wait for MariaDB to be ready
-    echo "Waiting for MariaDB to start..."
-    until mysqladmin -uroot ping --silent; do
-        sleep 2
-    done
-
-    # Run setup SQL commands
-    mysql -u root <<EOF
-ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+# Create a SQL initialization file
+cat > /tmp/init.sql << EOF
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
+ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 FLUSH PRIVILEGES;
 EOF
 
-    # Shutdown the temporary MariaDB instance
-    mysqladmin -uroot -p"${MYSQL_ROOT_PASSWORD}" shutdown
-fi
-
-# Start MariaDB in the foreground
-exec mysqld --user=mysql --console
+# Start MySQL with initialization file - this runs in the foreground
+echo "Starting MySQL with initialization..."
+exec mysqld --user=mysql --init-file=/tmp/init.sql --console

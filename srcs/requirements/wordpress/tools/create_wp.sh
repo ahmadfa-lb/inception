@@ -7,7 +7,6 @@ tar -xzvf latest.tar.gz -C /var/www/ || { echo "Extraction failed"; exit 1; }
 rm latest.tar.gz
 
 
-
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 mv wp-cli.phar /usr/local/bin/wp
@@ -20,7 +19,8 @@ chmod -R 755 /var/www/wordpress/
 
 echo "Running WordPress installation..."
 
-wp core download --allow-root;
+wp config create --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER \
+        --dbpass=$MYSQL_PASSWORD --dbhost=$MYSQL_HOSTNAME --allow-root  --skip-check
 
 echo "Wordpress: creating users..."
 
