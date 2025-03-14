@@ -12,17 +12,6 @@ Inception is a project from the 42 curriculum focused on creating a secure and s
 ✅ Persistent storage for data integrity across container restarts  
 ✅ Scalable architecture with container orchestration  
 
-🏗️ Project Structure
-inception/
-├── srcs/
-│   ├── nginx/             # NGINX configuration files
-│   ├── wordpress/         # WordPress setup and configuration
-│   ├── mariadb/           # MariaDB setup and configuration
-│   ├── Dockerfile         # Dockerfile for building the container
-├── .env                   # Environment variables
-├── docker-compose.yml     # Docker Compose configuration
-└── README.md              # Project documentation
-
 🛠️ Setup and Usage
 1. Clone the Repository:
 git clone https://github.com/ahmadfa-lb/inception.git
