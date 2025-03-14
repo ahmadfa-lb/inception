@@ -17,6 +17,7 @@ fclean:
 	sudo rm -rf /home/afarachi/data/wordpress
 
 show_all:
+	@echo "\n======================================\n"
 	docker images
 	@echo "\n======================================\n"
 	docker container ls
@@ -24,5 +25,6 @@ show_all:
 	docker network ls
 	@echo "\n======================================\n"
 	docker volume ls
+	@echo "\n======================================\n"
 
 re: fclean all

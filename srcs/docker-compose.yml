@@ -5,11 +5,10 @@ services:
     image: mariadb:afarachi
     container_name: mariadb
     build: ./requirements/mariadb
-    # image: mariadb
     volumes:
       - mariadb:/var/lib/mysql
     networks:
-      - network
+      - inception
     env_file:
       - .env
     restart: on-failure
@@ -28,7 +27,7 @@ services:
     volumes:
       - wordpress:/var/www/wordpress
     networks:
-      - network
+      - inception
       
   nginx:
     image: nginx:afarachi
@@ -40,7 +39,7 @@ services:
     volumes:
       - wordpress:/var/www/wordpress
     networks:
-        - network
+        - inception
     depends_on:
           - wordpress
           - mariadb
@@ -50,7 +49,7 @@ services:
 
 networks:
   network:
-    name: network
+    name: inception
     driver: bridge
 
 
